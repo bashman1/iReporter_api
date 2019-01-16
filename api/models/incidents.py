@@ -14,6 +14,10 @@ class IncidentList:
         new_incident = incident.__dict__
         self.incident_list.append(new_incident)
 
+    def add_user(self, user):
+        new_user = user.__dict__
+        self.user_list.append(new_user)
+
 
     def retreave_incidents(self):
         return [ incidents.__dict__ for incidents in self.incident_list]

@@ -1,10 +1,10 @@
 from flask import Blueprint, jsonify, abort, request, make_response, json
 from api.models.incidents import IncidentList
-from api.models.models import Incident
+from api.models.models import Incident, User
 from api.models.validators import Validator
 
 
-appblueprint = Blueprint('api',__name__)
+appblueprint = Blueprint('api',__name__)  
 incident = IncidentList()
 is_valid = Validator()
 
@@ -17,6 +17,24 @@ def index():
 def fetch_all_incidents():
     return jsonify({"incidents":incident.fetch_all_incidence()})
 
+
+@appblueprint.route('/users', methods = ['POST'])
+def register_user():
+    if not request.json or not request.get_json()['user_id'] or not \
+    request.get_json()['firstname'] or not request.get_json()['lastname'] \
+    or not request.get_json()['othername'] or not request.get_json()['email'] \
+    or not request.get_json()['phone_number'] or not request.get_json()['username'] \
+    or not request.get_json()['registered'] or not request.get_json()['is_admin']:
+        abort (400)
+
+    user_id, firstname, lastname, othername, email, phone_number, username, registered, is_admin = \
+    request.get_json()['user_id'], request.get_json()['firstname'], request.get_json()['lastname'], \
+    request.get_json()['othername'], request.get_json()['email'], request.get_json()['phone_number'], \
+    request.get_json()['username'], request.get_json()['registered'], request.get_json()['is_admin']
+
+    new_user = User(user_id, firstname, lastname, othername, email, phone_number, username, registered, is_admin)
+    incident.add_user(new_user)
+    return jsonify({"user":"user added"}), 201
 
 @appblueprint.route('/incidents', methods=['POST'])
 def report_incident():
