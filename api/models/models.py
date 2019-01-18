@@ -7,7 +7,7 @@ class User:
         # self.name = name 
         # self.user_id = user_id
         self.user_id = user_id 
-        self.fistname = firstname
+        self.firstname = firstname
         self.lastname = lastname
         self.othername = othername
         self.email = email 
@@ -23,7 +23,8 @@ class Incident:
                 incident_type, location, status, images,
                 videos, comment):
        
-        self.created_on = created_by
+        self.created_on = created_on
+        self.created_by = created_by
         self.incident_id = incident_id
         self.incident_type = incident_type
         self.location = location 
