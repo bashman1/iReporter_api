@@ -30,7 +30,7 @@ navigate to the project folder
 ```
 $ mkvirtualenv venv
 $ pip install -r requirements.txt
-$python run.py
+$ python run.py
 ```
 ## API endpoints
 
