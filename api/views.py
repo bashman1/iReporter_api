@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, abort, request, make_response, json
 from api.models.incidents import IncidentList
 from api.models.models import Incident, User
 from api.models.validators import Validator
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
 
 
@@ -27,15 +28,27 @@ def register_users():
     request.get_json()['username']
 
     user_id = incident.user_id_generator()
-    is_admin = False
+    is_admin = True
     registered = date_today = datetime.now().strftime('%d/%m/%Y %H:%M')
     new_user = User(user_id, fistname, lastname, othername, email, phone_number,username, registered, is_admin)
     incident.add_user(new_user)
     return jsonify({"Status Code":201,"User":incident.user_list[-1]}), 201
 
+@appblueprint.route('/auth', methods = ['POST'])
+def user_login():
+    username = request.get_json()['username']
+    for user in incident.fetch_all_users():
+        if username == user['username']:
+            access_token = create_access_token(identity=username)
+            return jsonify({"access_tocken":access_token})
+    return jsonify({"Error":"User name does not exist"})
+
+
 @appblueprint.route('/users')
+@jwt_required
 def fetch_all_users():
-    return jsonify({"Users":incident.fetch_all_users()}), 200
+    current_user = get_jwt_identity()
+    return jsonify({"Users":incident.fetch_all_users(), "Identity":current_user}), 200
 
 
 
